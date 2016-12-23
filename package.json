@@ -1,0 +1,28 @@
+{
+  "name": "stressy",
+  "version": "1.0.0",
+  "description": "A Web api stress tool written in node.js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexopoulos7/stressy.git"
+  },
+  "keywords": [
+    "load",
+    "stress",
+    "web",
+    "api"
+  ],
+  "author": "Angelos Alexopoulos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexopoulos7/stressy/issues"
+  },
+  "homepage": "https://github.com/alexopoulos7/stressy#readme"
+}

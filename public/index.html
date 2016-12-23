@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Stress Test Viewer</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+  <script>
+     $(document).ready(function() {
+      $('select').material_select();
+    });
+      'use strict';
+        function start(){
+        $.ajax({
+          url: '/api/stress',
+          type: 'POST',
+          data:{
+            url : $('#stressUrl').val(),
+            method:$('#stressMethod').val(),
+            header:$('#header').val(),
+            headerValue:$('#headerValue').val(),
+            requests:$('#requests').val(),
+            requestBody: $('#stress-body').val(),
+            matchWord: $('#matchWord').val(),
+            matchWordReplace:$('#matchWordReplace').is(":checked")
+
+          },
+          success: (data)=>{
+            $('#result').html(JSON.stringify(data,null,4));
+          },
+          error:err=>{
+            $('#result').html(JSON.stringify(err,null,4));
+            alert('Error!');
+          }
+        })
+      }    
+  </script>
+</head>
+
+<body>
+   
+  
+   <div class="card large blue-grey darken-1">
+   <div class="card-content white-text">
+      <span class="card-title">Angelos Stress Test</span>
+      <div class="row">
+          <div class="input-field col s8">
+            <input placeholder="Stress this url" id="stressUrl" type="text" class="validate">
+            <label for="stressUrl">URL</label>
+          </div>
+   
+          <div class="input-field col s2">
+             <select id ="stressMethod">
+              <option value="" disabled selected>Method</option>
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option> 
+             </select>
+          </div>
+   
+          <div class="input-field col s2">
+            <button onclick="start();" class="waves-effect waves-light btn">Start</button>
+          </div>
+      </div>
+
+      <!-- Second Row -->
+       <div class="row">
+          <div class="input-field col s2">
+            <input placeholder="1000" id ="requests" type="text">
+            <label for="requests"># of Requests</label>
+          </div>
+          <div class="input-field col s2">
+            <input id = "header" placeholder="header" type="text">
+          </div>
+          <div class="input-field col s2">
+            <input type="text" id="headerValue" placeholder="header value">
+          </div>
+          <div class="input-field col s2">
+            <input type="text" id="matchWord" placeholder="${matchWord}">
+            <label for="matchWord">Match Word</label>
+          </div>
+          <div class="switch col s2">
+              <label>
+                Off
+                <input type="checkbox" id="matchWordReplace">
+                <span class="lever"></span>
+                On
+              </label>
+          </div>
+          <div class="col s2">
+            <label>Replace occuracies of Match Word with consecutive IDs</label>
+          </div>
+      </div>
+
+      <!-- Third Row -->
+      <div class="row">
+        <div class="input-field col s12">
+              <textarea id="stress-body" class="materialize-textarea"></textarea>
+              <label for="stress-body">Request Body</label>
+            </div>
+      </div>
+    </div>
+   </div>   
+ 
+  <pre id="result" style="width:100%;overflow:auto; max-height:500px;"></pre>
+  
+</body>
+
+</html>

@@ -33,3 +33,7 @@ Express server opens in port 3131 but you can change by setting the environment 
 * [Express]
 * [Materialize] - For CSS and JS
 * [JQuery]
+
+## Example
+
+![Sample Screenshot](screenshot.png)

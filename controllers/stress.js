@@ -15,7 +15,7 @@ module.exports = (req) => {
 		let reqs = parseInt(requests);
 		let matchWord = req.body.matchWord;
 		let matchWordReplace = (req.body.matchWordReplace || "false" ) === "true";
-
+		
 		
 		let re = new RegExp(matchWord, 'g');
 		// lets break requests to 1000 chunks
@@ -35,21 +35,25 @@ module.exports = (req) => {
 			for (let i = chunkStart; i < chunkEnd; i++) {
 				debug(i);
 				let bodyText = "";
+				let urlText = "";
 				let rand = Math.floor(Math.random() * 90000) + 10000;
-				if (method !== 'GET' && requestBody && requestBody.length && matchWordReplace){
+				if (requestBody && requestBody.length && matchWordReplace){
 					rand = rand + i 
 					bodyText = requestBody.replace(re, rand.toString());
-				}
+					urlText = url.replace(re, rand.toString());
+					debug('URL '+ urlText);
+				} 
+
 				let headers = {}
 				if (header && headerValue){
 					headers = [{name:header, value:headerValue}]
 				}
+
 				let options = {
-					url :url,
+					url :urlText || url,
 					method:method,
 					headers:headers,
 					body: bodyText
-					
 				}
 			    toSendRequests.push(options);
 			}
@@ -60,15 +64,8 @@ module.exports = (req) => {
 				// console.log(results);
 					debug('done chunk '+c);
 			});
-		}
-			
-
-		
-
+		} 
 		return `${reqs} Requests started to flow`
-
-
-
 	}
 	else{
 		return 'Url input parameter is needed!';

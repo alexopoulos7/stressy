@@ -8,12 +8,12 @@ module.exports = (req) => {
 	if (req.body.url){
 		let url = req.body.url;
 		let method = req.body.method || 'GET';
-		let header = req.body.header;
-		let headerValue = req.body.headerValue;
+		let header = req.body.header || 'Content/Type';
+		let headerValue = req.body.headerValue || 'application-type/xml';
 		let requests = req.body.requests || '1000';
-		let requestBody = req.body.requestBody;
+		let requestBody = req.body.requestBody || '';
 		let reqs = parseInt(requests);
-		let matchWord = req.body.matchWord;
+		let matchWord = req.body.matchWord || ' ';
 		let matchWordReplace = (req.body.matchWordReplace || "false" ) === "true";
 		
 		

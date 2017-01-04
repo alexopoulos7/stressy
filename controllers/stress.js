@@ -23,51 +23,56 @@ module.exports = (req) => {
         let chunks = Math.floor(reqs / chunkSize);
 
         debug('total number of chunks ' + chunks);
-        for (let c = 0; c < chunks; c++) {
+        setTimeout(() => {
+            for (let c = 0; c < chunks; c++) {
 
-            let chunkStart = c * chunkSize;
-            let chunkEnd = (c + 1) * chunkSize;
-            if (c === chunks) {
-                chunkEnd = reqs;
+                let chunkStart = c * chunkSize;
+                let chunkEnd = (c + 1) * chunkSize;
+                if (c === chunks) {
+                    chunkEnd = reqs;
+                }
+                debug('Chunk Start ' + chunkStart);
+                debug('Chunk End ' + chunkEnd);
+                let toSendRequests = [];
+                for (let i = chunkStart; i < chunkEnd; i++) {
+                    debug(i);
+                    let bodyText = "";
+                    let urlText = "";
+                    let rand = Math.floor(Math.random() * 90000) + 10000;
+                    if (requestBody && requestBody.length && matchWordReplace) {
+                        rand = rand + i
+                        bodyText = requestBody.replace(re, rand.toString());
+                        urlText = url.replace(re, rand.toString());
+                        debug('URL ' + urlText);
+                    }
+
+                    let headers = {}
+                    if (header && headerValue) {
+                        headers = [{ name: header, value: headerValue }]
+                    }
+
+                    let options = {
+                        url: urlText || url,
+                        method: method,
+                        headers: headers,
+                        body: bodyText
+                    }
+                    toSendRequests.push(options);
+                }
+                sendRequests(toSendRequests).then(() => {
+                    debug('Move to next chunk');
+                });
             }
-            debug('Chunk Start ' + chunkStart);
-            debug('Chunk End ' + chunkEnd);
-            let toSendRequests = [];
-            for (let i = chunkStart; i < chunkEnd; i++) {
-                debug(i);
-                let bodyText = "";
-                let urlText = "";
-                let rand = Math.floor(Math.random() * 90000) + 10000;
-                if (requestBody && requestBody.length && matchWordReplace) {
-                    rand = rand + i
-                    bodyText = requestBody.replace(re, rand.toString());
-                    urlText = url.replace(re, rand.toString());
-                    debug('URL ' + urlText);
-                }
+        }, 0)
 
-                let headers = {}
-                if (header && headerValue) {
-                    headers = [{ name: header, value: headerValue }]
-                }
-
-                let options = {
-                    url: urlText || url,
-                    method: method,
-                    headers: headers,
-                    body: bodyText
-                }
-                toSendRequests.push(options);
-            }
-            sendRequests(toSendRequests).then(() => {
-                debug('Move to next chunk');
-            });
-        }
         debug('Finished');
         return `${reqs} Requests started to flow`
     } else {
         return 'Url input parameter is needed!';
     }
 }
+
+
 
 const sendRequests = toSendRequests => {
     return new Promise((resolve, reject) => {
